@@ -1,0 +1,12 @@
+There's no code here, but this repo is collecting my notes.
+
+Pigeon needs to:
+* Receive external alerts - probably by email
+* Avoid spam - there'll be criteria like "must have this word in the subject" or "must be sent envelope-from this domain"
+* Pop up, obviously
+* Grab attention
+
+Possibilities:
+* IMAP notification
+* Always-On-Top window with the urgency hint set, vs Presented window
+* Can I programmatically put the window on all workspaces??
