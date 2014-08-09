@@ -19,7 +19,7 @@ string imap(mapping(string:mixed) conn,string line)
 	}
 	if (has_prefix(line,"log OK")) return "stats select inbox";
 	if (sscanf(line,"* %d RECEN%c",int newmail,int T) && T=='T' && newmail) write("%%%% NEW MAIL: %d messages\n",newmail);
-	if (has_prefix(line,"stats OK")) call_out(noop,config->period||60,conn);
+	if (has_prefix(line,"stats OK")) call_out(noop,(int)config->period||60,conn);
 }
 
 void create()
