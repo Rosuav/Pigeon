@@ -9,4 +9,4 @@ Pigeon needs to:
 Possibilities:
 * IMAP notification
 * Always-On-Top window with the urgency hint set, vs Presented window
-* Can I programmatically put the window on all workspaces??
+* Can I programmatically put the window on all workspaces?? Actually, probably no need; a new window will be on the current workspace.
