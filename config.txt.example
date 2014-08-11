@@ -1,0 +1,8 @@
+The file format is extremely simplistic. There is no room for comments, even,
+so just remove everything as far as the cut line.
+-- cut --
+ip=IP address of your IMAP server
+port=Port to talk IMAP on, 143 by default
+credentials=username password
+period=number of seconds between polls, default 60
+flagword=if set, this word (case sensitive) must occur in the Subject line
