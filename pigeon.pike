@@ -25,15 +25,12 @@ string imap(mapping(string:mixed) conn,string line)
 		conn->stringlit+=line[..len-1]; line=line[len..];
 		if (conn->cmdpfx=="* "+conn->fetching+" FETCH (BODY[] " && line==")")
 		{
-			//Looks like the message we want. Pop it up... or at least display it.
 			object msg=MIME.Message(conn->stringlit);
 			//Bail out if the message doesn't fit our criteria
 			if (config->flagword && !has_value(msg->headers->subject,config->flagword)) return 0;
-			//Display it!
 			write(">> New pigeon from %s\n%s\n-----\n",msg->headers->from,String.trim_all_whites(msg->data));
-			return 0;
 		}
-		else return 0; //Don't know what to do with it :(
+		return 0;
 	}
 	if (line!="" && line[-1]=='}')
 	{
