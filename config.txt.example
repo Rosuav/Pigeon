@@ -6,3 +6,4 @@ port=Port to talk IMAP on, 143 by default
 credentials=username password
 period=number of seconds between polls, default 60
 flagword=if set, this word (case sensitive) must occur in the Subject line
+alertcmd=if set, this command will be executed (asynchronously) when a pigeon arrives

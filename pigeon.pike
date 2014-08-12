@@ -29,6 +29,7 @@ string imap(mapping(string:mixed) conn,string line)
 			//Bail out if the message doesn't fit our criteria
 			if (config->flagword && !has_value(msg->headers->subject,config->flagword)) return 0;
 			write(">> New pigeon from %s\n%s\n-----\n",msg->headers->from,String.trim_all_whites(msg->data));
+			if (config->alertcmd) Process.Process(config.alertcmd);
 		}
 		return 0;
 	}
