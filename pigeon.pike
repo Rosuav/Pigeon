@@ -23,7 +23,7 @@ string imap(mapping(string:mixed) conn,string line)
 		if (conn->stringlitlen>=sizeof(line)+2) {conn->stringlit+=line+"\n"; conn->stringlitlen-=sizeof(line)+2; return 0;}
 		int len=m_delete(conn,"stringlitlen");
 		conn->stringlit+=line[..len-1]; line=line[len..];
-		if (conn->cmdpfx=="* "+conn->fetching+" FETCH (BODY[] " && line==")")
+		if (sscanf(conn->cmdpfx,"* %*d FETCH (UID %d BODY[] ",int msgid) && msgid && line==")") catch
 		{
 			object msg=MIME.Message(conn->stringlit);
 			mapping hdr=msg->headers; //We'll use this a lot
@@ -41,7 +41,7 @@ string imap(mapping(string:mixed) conn,string line)
 			)->show_all()->set_keep_above(1);
 			close->signal_connect("clicked",lambda() {win->destroy();});
 			if (config->alertcmd) Process.Process(config.alertcmd);
-		}
+		}; //Ignore any errors on decode, just skip the message
 		return 0;
 	}
 	if (line!="" && line[-1]=='}')
@@ -55,8 +55,8 @@ string imap(mapping(string:mixed) conn,string line)
 		return 0;
 	}
 	if (has_prefix(line,"log OK")) return "stats select inbox";
-	if (sscanf(line,"* %d RECEN%c",int newmail,int T) && T=='T' && newmail) return "srch search recent";
-	if (sscanf(line,"* SEARCH %d",int msgid) && msgid) return "newmail fetch "+(conn->fetching=msgid)+" (body[])";
+	if (sscanf(line,"* %d RECEN%c",int newmail,int T) && T=='T' && newmail) return "srch uid search new";
+	if (sscanf(line,"* SEARCH%{ %d%}",array(array(int)) msgids) && msgids && sizeof(msgids)) return sprintf("%{newmail uid fetch %d (body[])\n%}",msgids);
 	if (has_prefix(line,"stats OK")) call_out(noop,(int)config->period||60,conn);
 }
 
