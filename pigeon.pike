@@ -26,9 +26,20 @@ string imap(mapping(string:mixed) conn,string line)
 		if (conn->cmdpfx=="* "+conn->fetching+" FETCH (BODY[] " && line==")")
 		{
 			object msg=MIME.Message(conn->stringlit);
+			mapping hdr=msg->headers; //We'll use this a lot
 			//Bail out if the message doesn't fit our criteria
-			if (config->flagword && !has_value(msg->headers->subject,config->flagword)) return 0;
-			write(">> New pigeon from %s\n%s\n-----\n",msg->headers->from,String.trim_all_whites(msg->data));
+			if (config->flagword && !has_value(hdr->subject,config->flagword)) return 0;
+			write(">> New pigeon from %s\n%s\n-----\n",hdr->from,String.trim_all_whites(msg->data));
+			object del,close;
+			object win=GTK2.Window((["title":"Pigeon by email"]))->add(GTK2.Vbox(0,0)
+				->add(GTK2.Label("Pigeon from "+(hdr->from||hdr["return-path"]||"(unknown)")))
+				->add(GTK2.TextView(GTK2.TextBuffer()->set_text(String.trim_all_whites(msg->data)+"\n"))->set_editable(0))
+				->add(GTK2.HbuttonBox()
+					->add(del=GTK2.Button((["label":"_Delete message","use-underline":1]))->set_sensitive(0)) //TODO: will require UUIDs or careful handling around EXPUNGE
+					->add(close=GTK2.Button((["label":"_Close","use-underline":1])))
+				)
+			)->show_all()->set_keep_above(1);
+			close->signal_connect("clicked",lambda() {win->destroy();});
 			if (config->alertcmd) Process.Process(config.alertcmd);
 		}
 		return 0;
@@ -52,6 +63,7 @@ string imap(mapping(string:mixed) conn,string line)
 void create()
 {
 	if (!G->G->curr_conn) call_out(connect,0);
+	if (!G->G->GTK2) G->G->GTK2=GTK2.setup_gtk();
 	sscanf(Stdio.read_file("config.txt")||"","%{%s=%s\n%}",array config_arr);
 	config=(mapping)config_arr;
 	services[(config->port||143)|HOGAN_ACTIVE|HOGAN_LINEBASED]=imap;
