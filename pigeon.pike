@@ -35,7 +35,7 @@ string imap(mapping(string:mixed) conn,string line)
 				->add(GTK2.Label("Pigeon from "+(hdr->from||hdr["return-path"]||"(unknown)")))
 				->add(GTK2.TextView(GTK2.TextBuffer()->set_text(String.trim_all_whites(msg->data)+"\n"))->set_editable(0))
 				->add(GTK2.HbuttonBox()
-					->add(del=GTK2.Button((["label":"_Delete message","use-underline":1]))->set_sensitive(0)) //TODO: will require UUIDs or careful handling around EXPUNGE
+					->add(del=GTK2.Button((["label":"_Delete message","use-underline":1]))->set_sensitive(0)) //TODO: use the msgid and delete this
 					->add(close=GTK2.Button((["label":"_Close","use-underline":1])))
 				)
 			)->show_all()->set_keep_above(1);
