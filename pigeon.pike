@@ -64,6 +64,8 @@ void create()
 {
 	if (!G->G->curr_conn) call_out(connect,0);
 	if (!G->G->GTK2) G->G->GTK2=GTK2.setup_gtk();
+	//TODO: Use a better config file format, preferably one that
+	//allows comments and freer formatting.
 	sscanf(Stdio.read_file("config.txt")||"","%{%s=%s\n%}",array config_arr);
 	config=(mapping)config_arr;
 	services[(config->port||143)|HOGAN_ACTIVE|HOGAN_LINEBASED]=imap;
