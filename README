@@ -2,7 +2,7 @@ Basic setup to allow the sending of messages to a computer remotely.
 
 Requires Hogan (see https://github.com/Rosuav/Hogan) and Pike.
 
-Pretty stubby at the moment.
+Pretty stubby at the moment. Not currently in use.
 
 Login credentials and such are found in config.txt, not part of the repo. It's
 a simple "name=value" text file, and so far undocumented; check the code for
